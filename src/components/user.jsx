@@ -1,9 +1,8 @@
 import React from "react";
-import Quality from "./qualitie";
+import Quality from "./quality";
 import Bookmark from "./bookmark";
 
 const User = ({user, rest}) => {
-  // console.log(user.status);
   return (
     <>
       <tr key={user._id}>
@@ -26,7 +25,7 @@ const User = ({user, rest}) => {
             className="btn btn-outline-secondary"
             onClick={() => rest.onToggle(user._id)}
           >
-            <Bookmark status={user.status} rest={rest} />
+            <Bookmark status={user.bookmark} />
           </button>
         </td>
         <td>

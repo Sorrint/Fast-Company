@@ -17,9 +17,6 @@ const Users = ({users, ...rest}) => {
         </thead>
         <tbody>
           {users.map((user) => {
-            if (!user.status) {
-              user.status = false;
-            }
             return <User key={user._id} user={user} rest={rest} />;
           })}
         </tbody>

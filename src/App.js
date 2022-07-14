@@ -11,20 +11,11 @@ function App() {
   const handleToggleBookmark = (id) => {
     const updatedUsers = users.map((user) => {
       if (user._id === id) {
-        return {...user, status: !user.status};
+        return {...user, bookmark: !user.bookmark};
       }
       return user;
     });
     setUsers(updatedUsers);
-    // setUsers((prevState) =>
-    //   prevState.map((users) => {
-    //     if (users._id === id) {
-    //       return {...users, status: !users.status};
-    //     }
-    //     return users;
-    //   })
-    // );
-    // console.log(us)
   };
 
   return (
