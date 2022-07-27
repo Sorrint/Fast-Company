@@ -22,7 +22,6 @@ const Users = ({ users: allUsers, ...rest }) => {
     }, [selectedProf]);
 
     const handleProfessionSelect = (selectedItem) => {
-        console.log(selectedItem);
         setSelectedProf(selectedItem);
     };
 
