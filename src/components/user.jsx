@@ -3,39 +3,21 @@ import Quality from './quality';
 import Bookmark from './bookmark';
 import PropTypes from 'prop-types';
 
-const User = ({
-    _id,
-    name,
-    qualities,
-    profession,
-    completedMeetings,
-    rate,
-    onDelete,
-    bookmark,
-    onToggleBookmark
-}) => {
+const User = ({ _id, name, qualities, profession, completedMeetings, rate, onDelete, bookmark, onToggleBookmark }) => {
     return (
         <>
             <tr>
                 <td>{name}</td>
                 <td>
                     {qualities.map((quality) => (
-                        <Quality
-                            key={quality._id}
-                            color={quality.color}
-                            name={quality.name}
-                            id={quality._id}
-                        />
+                        <Quality key={quality._id} color={quality.color} name={quality.name} id={quality._id} />
                     ))}
                 </td>
                 <td>{profession.name}</td>
                 <td>{completedMeetings}</td>
                 <td>{rate} /5</td>
                 <td>
-                    <Bookmark
-                        status={bookmark}
-                        onClick={() => onToggleBookmark(_id)}
-                    />
+                    <Bookmark status={bookmark} onClick={() => onToggleBookmark(_id)} />
                 </td>
                 <td>
                     <button

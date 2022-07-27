@@ -24,13 +24,9 @@ const SearchStatus = ({ length }) => {
         <>
             <h2>
                 {length === 0 ? (
-                    <span className="badge bg-danger">
-                        Никто с тобой не тусанет
-                    </span>
+                    <span className="badge bg-danger">Никто с тобой не тусанет</span>
                 ) : (
-                    <span className="badge bg-primary">
-                        {renderPhrase(length)}
-                    </span>
+                    <span className="badge bg-primary">{renderPhrase(length)}</span>
                 )}
             </h2>
         </>
