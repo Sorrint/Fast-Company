@@ -11,7 +11,7 @@ const UserPage = ({ id }) => {
         api.users.getById(id).then((data) => setUser(data));
     }, []);
     const handleReturn = () => {
-        history.push('/users');
+        history.replace('/users');
     };
     if (user) {
         return (
