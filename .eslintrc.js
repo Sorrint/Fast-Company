@@ -13,10 +13,11 @@ module.exports = {
     },
     plugins: ['react'],
     rules: {
-        indent: ['error', 4, { SwitchCase: 1 }],
+        // indent: ['error', 4, { SwitchCase: 1, ternary: 1 }],
+        indent: ['off'],
         semi: [2, 'always'],
         requireMultiLineTernary: 0,
-        'multiline-ternary': ['error', 'never'],
+        'multiline-ternary': ['off'],
         'space-before-function-paren': ['error', { anonymous: 'always', named: 'never' }]
     }
 };
