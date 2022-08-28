@@ -7,7 +7,7 @@ import RadioField from '../../common/form/radioField';
 import MultiSelectField from '../../common/form/multiSelectField';
 import { useHistory } from 'react-router-dom';
 
-const UserPageEdit = ({ id }) => {
+const EditUserPage = ({ id }) => {
     const history = useHistory();
     const [userData, setUserData] = useState();
     const [professions, setProfession] = useState();
@@ -127,8 +127,8 @@ const UserPageEdit = ({ id }) => {
     }
 };
 
-UserPageEdit.propTypes = {
+EditUserPage.propTypes = {
     id: PropTypes.string
 };
 
-export default UserPageEdit;
+export default EditUserPage;
