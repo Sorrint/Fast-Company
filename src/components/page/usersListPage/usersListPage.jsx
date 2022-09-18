@@ -33,9 +33,6 @@ const UsersListPage = () => {
 
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
-    }, []);
-
-    useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data));
     }, []);
 
