@@ -6,12 +6,15 @@ import SelectField from '../../common/form/selectField';
 import RadioField from '../../common/form/radioField';
 import MultiSelectField from '../../common/form/multiSelectField';
 import { useHistory } from 'react-router-dom';
+import BackHistoryButton from '../../common/backButton';
+import { validator } from '../../../utils/validator';
 
 const EditUserPage = ({ id }) => {
     const history = useHistory();
     const [userData, setUserData] = useState();
     const [professions, setProfession] = useState();
     const [qualities, setQualities] = useState();
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         api.users.getById(id).then((data) => {
@@ -53,15 +56,42 @@ const EditUserPage = ({ id }) => {
         setUserData((prevState) => ({ ...prevState, [target.name]: target.value }));
     };
 
+    const validatorConfig = {
+        email: {
+            isRequired: {
+                message: 'Электронная почта обязательна для заполнения'
+            },
+            isEmail: {
+                message: 'Email ввден некорректно'
+            }
+        },
+        name: {
+            isRequired: {
+                message: 'Введите ваше имя'
+            }
+        }
+    };
+    const validate = () => {
+        const errors = validator(userData, validatorConfig);
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+    useEffect(() => {
+        validate();
+    }, [userData]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         api.users.update(id, userData);
         history.replace(`/users/${id}`);
     };
+
+    const isValid = Object.keys(errors).length === 0;
     if (userData && professions) {
         return (
             <>
                 <div className="container mt-5">
+                    <BackHistoryButton />
                     <div className="row">
                         <div className="col-md-6 offset-md-3 shadow p-4">
                             <form onSubmit={handleSubmit}>
@@ -70,12 +100,14 @@ const EditUserPage = ({ id }) => {
                                     name="name"
                                     value={userData.name}
                                     onChange={handleChange}
+                                    error={errors.name}
                                 />
                                 <TextField
                                     label="Электронная почта"
                                     name="email"
                                     value={userData.email}
                                     onChange={handleChange}
+                                    error={errors.email}
                                 />
                                 <SelectField
                                     label="Выбери свою профессию"
@@ -105,7 +137,7 @@ const EditUserPage = ({ id }) => {
                                     name="qualities"
                                     label="Выберите Ваши качества"
                                 />
-                                <button type="submit" className="btn btn-primary w-100 mx-auto">
+                                <button type="submit" className="btn btn-primary w-100 mx-auto" disabled={!isValid}>
                                     Обновить
                                 </button>
                             </form>
