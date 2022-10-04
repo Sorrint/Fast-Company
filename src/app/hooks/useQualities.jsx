@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const QualitiesContext = React.createContext();
 
-export const UseQualities = () => {
+export const useQualities = () => {
     return useContext(QualitiesContext);
 };
 

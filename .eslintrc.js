@@ -18,6 +18,7 @@ module.exports = {
         semi: [2, 'always'],
         requireMultiLineTernary: 0,
         'multiline-ternary': ['off'],
-        'space-before-function-paren': ['error', { anonymous: 'always', named: 'never' }]
+        'space-before-function-paren': ['error', { anonymous: 'always', named: 'never' }],
+        'no-unused-expressions': ['off']
     }
 };
