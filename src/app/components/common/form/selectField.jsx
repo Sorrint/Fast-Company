@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const SelectField = ({ label, value, onChange, defaultOption, options, name, error }) => {
-    console.log(options);
     const handleChange = ({ target }) => {
         onChange({ name: target.name, value: target.value });
     };
