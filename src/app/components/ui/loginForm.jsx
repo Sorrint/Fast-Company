@@ -7,26 +7,21 @@ import TextField from '../common/form/textField';
 
 const LoginForm = () => {
     const history = useHistory();
-    const { signUp } = useAuth();
+    const { signIn } = useAuth();
     const [data, setData] = useState({ email: '', password: '', stayOn: false });
     const [errors, setErrors] = useState({});
+    const [enterError, setEnterError] = useState(null);
     const handleChange = (target) => {
         setData((prevState) => ({ ...prevState, [target.name]: target.value }));
+        setEnterError(null);
     };
 
     const validatorConfig = {
         email: {
-            isRequired: { message: 'Электронная почта обязательна для заполнения' },
-            isEmail: { message: 'Email введен некорректно' }
+            isRequired: { message: 'Электронная почта обязательна для заполнения' }
         },
         password: {
-            isRequired: { message: 'Пароль обязателен для заполнения' },
-            isCapitalSymbol: { message: 'Пароль должен содержать хотя бы одну заглавную букву' },
-            isContainDigit: { message: 'Пароль должен содержать хотя бы одну цифру' },
-            min: {
-                message: 'Пароль должен быть не менее 8 символов',
-                value: 8
-            }
+            isRequired: { message: 'Пароль обязателен для заполнения' }
         }
     };
 
@@ -47,10 +42,10 @@ const LoginForm = () => {
         const isValid = validate();
         if (!isValid) return;
         try {
-            await signUp(data);
-            history.push('/');
+            await signIn(data);
+            history.push(history.location.state ? history.location.state.from.pathname : '/');
         } catch (error) {
-            setErrors(error);
+            setEnterError(error.message);
         }
     };
     return (
@@ -74,7 +69,8 @@ const LoginForm = () => {
                 <CheckBoxField value={data.stayOn} onChange={handleChange} name="stayOn">
                     Оставаться в системе
                 </CheckBoxField>
-                <button type="submit" disabled={!isValid} className="btn btn-primary w-100 mx-auto">
+                {enterError && <p className="text-danger">{enterError}</p>}
+                <button type="submit" disabled={!isValid || enterError} className="btn btn-primary w-100 mx-auto">
                     Submit
                 </button>
             </form>
