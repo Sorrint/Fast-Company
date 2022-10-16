@@ -1,59 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import api from '../../../api';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import TextField from '../../common/form/textField';
 import SelectField from '../../common/form/selectField';
 import RadioField from '../../common/form/radioField';
-import MultiSelectField from '../../common/form/multiSelectField';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import BackHistoryButton from '../../common/backButton';
 import { validator } from '../../../utils/validator';
+import { useUser } from '../../../hooks/useUsers';
+import { useProfessions } from '../../../hooks/useProfession';
+import { useQualities } from '../../../hooks/useQualities';
+import MultiSelectField from '../../common/form/multiSelectField';
+import { useAuth } from '../../../hooks/useAuth';
 
-const EditUserPage = ({ id }) => {
+const EditUserPage = () => {
+    const { userId } = useParams();
     const history = useHistory();
-    const [userData, setUserData] = useState();
-    const [professions, setProfession] = useState();
-    const [qualities, setQualities] = useState();
-    const [errors, setErrors] = useState({});
+
+    const { getUserById } = useUser();
+
+    const { updateUserData } = useAuth();
+    const [userData, setData] = useState();
+    const { professions } = useProfessions();
+    const professionsList = professions.map((p) => ({
+        value: p._id,
+        label: p.name
+    }));
+
+    const { qualities } = useQualities();
+    const qualitiesList = qualities.map((p) => ({
+        value: p._id,
+        label: p.name
+    }));
 
     useEffect(() => {
-        api.users.getById(id).then((data) => {
-            setUserData(data);
-        });
-        api.professions.fetchAll().then((data) => {
-            const professionsList = Object.keys(data).map((professionName) => ({
-                label: data[professionName].name,
-                value: data[professionName]._id,
-                key: professionName
-            }));
-            setProfession(professionsList);
-        });
-
-        api.qualities.fetchAll().then((data) => {
-            const qualitiesList = Object.keys(data).map((optionName) => ({
-                label: data[optionName].name,
-                value: data[optionName]._id,
-                color: data[optionName].color,
-                key: optionName
-            }));
-            setQualities(qualitiesList);
-        });
+        const user = getUserById(userId);
+        const userQualities = user.qualities.map((userQuality) => qualitiesList.find((q) => q.value === userQuality));
+        setData(() => ({ ...user, qualities: userQualities }));
     }, []);
 
+    const [errors, setErrors] = useState({});
+
     const handleChange = (target) => {
-        if (target.name === 'profession') {
-            const professionData = professions.find((profession) => profession.value === target.value);
-            target.value = { _id: professionData.value, name: professionData.label };
-        }
-        if (target.name === 'qualities') {
-            const qualitiesData = target.value.map((userQuality) => ({
-                _id: userQuality.value,
-                name: userQuality.label,
-                color: userQuality.color
-            }));
-            target.value = [...qualitiesData];
-        }
-        setUserData((prevState) => ({ ...prevState, [target.name]: target.value }));
+        setData((prevState) => ({ ...prevState, [target.name]: target.value }));
     };
 
     const validatorConfig = {
@@ -80,14 +67,21 @@ const EditUserPage = ({ id }) => {
         validate();
     }, [userData]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        api.users.update(id, userData);
-        history.replace(`/users/${id}`);
+        console.log(userData);
+        const isValid = validate();
+        if (!isValid) return;
+        const newData = { ...userData, qualities: userData.qualities.map((q) => q.value) };
+        try {
+            await updateUserData(newData).then(() => history.push(`/users/${userData._id}`));
+        } catch (error) {
+            setErrors(error);
+        }
     };
 
     const isValid = Object.keys(errors).length === 0;
-    if (userData && professions) {
+    if (userData) {
         return (
             <>
                 <div className="container mt-5">
@@ -112,9 +106,9 @@ const EditUserPage = ({ id }) => {
                                 <SelectField
                                     label="Выбери свою профессию"
                                     name="profession"
-                                    options={professions}
+                                    options={professionsList}
                                     onChange={handleChange}
-                                    value={userData.profession._id}
+                                    value={userData.profession}
                                     defaultOption="Choose..."
                                 />
                                 <RadioField
@@ -129,11 +123,9 @@ const EditUserPage = ({ id }) => {
                                     onChange={handleChange}
                                 />
                                 <MultiSelectField
-                                    options={qualities}
+                                    options={qualitiesList}
                                     onChange={handleChange}
-                                    defaultValue={userData.qualities.map((userQuality) =>
-                                        qualities.find((quality) => (quality.value === userQuality._id ? quality : ''))
-                                    )}
+                                    defaultValue={userData.qualities}
                                     name="qualities"
                                     label="Выберите Ваши качества"
                                 />
@@ -157,10 +149,6 @@ const EditUserPage = ({ id }) => {
             </div>
         );
     }
-};
-
-EditUserPage.propTypes = {
-    id: PropTypes.string
 };
 
 export default EditUserPage;

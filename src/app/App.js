@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import NavBar from './components/ui/navBar';
 import Main from './layouts/main';
 import Login from './layouts/login';
@@ -8,6 +8,8 @@ import { ToastContainer } from 'react-toastify';
 import { ProfessionProvider } from './hooks/useProfession';
 import { QualitiesProvider } from './hooks/useQualities';
 import AuthProvider from './hooks/useAuth';
+import ProtectedRoute from './components/common/protectedRoute';
+import LogOut from './layouts/logOut';
 
 function App() {
     return (
@@ -17,9 +19,11 @@ function App() {
                 <ProfessionProvider>
                     <QualitiesProvider>
                         <Switch>
+                            <ProtectedRoute path="/users/:userId?/:userEdit?" component={Users}></ProtectedRoute>
                             <Route path="/" exact component={Main}></Route>
                             <Route path="/login/:type?" component={Login}></Route>
-                            <Route path="/users/:userId?/:userEdit?" component={Users}></Route>
+                            <Route path="/logout" component={LogOut}></Route>
+                            <Redirect to="/" />
                         </Switch>
                     </QualitiesProvider>
                 </ProfessionProvider>

@@ -14,6 +14,7 @@ const RegisterForm = () => {
     const history = useHistory();
     const [data, setData] = useState({
         email: '',
+        name: '',
         password: '',
         profession: '',
         sex: 'female',
@@ -21,7 +22,7 @@ const RegisterForm = () => {
         license: false
     });
 
-    const { signIn } = useAuth();
+    const { signUp } = useAuth();
     const { qualities } = useQualities();
     const qualitiesList = qualities.map((q) => ({
         value: q._id,
@@ -42,6 +43,13 @@ const RegisterForm = () => {
         email: {
             isRequired: { message: 'Электронная почта обязательна для заполнения' },
             isEmail: { message: 'Email введен некорректно' }
+        },
+        name: {
+            isRequired: { message: 'Имя обязательно для заполнения' },
+            min: {
+                message: 'Имя должно быть не менее 3 символов',
+                value: 3
+            }
         },
         password: {
             isRequired: { message: 'Пароль обязателен для заполнения' },
@@ -80,7 +88,7 @@ const RegisterForm = () => {
         if (!isValid) return;
         const newData = { ...data, qualities: data.qualities.map((q) => q.value) };
         try {
-            await signIn(newData);
+            await signUp(newData);
             history.push('/');
         } catch (error) {
             setErrors(error);
@@ -96,6 +104,7 @@ const RegisterForm = () => {
                     onChange={handleChange}
                     error={errors.email}
                 />
+                <TextField label="Имя" name="name" value={data.name} onChange={handleChange} error={errors.name} />
                 <TextField
                     label="Пароль"
                     type="password"
