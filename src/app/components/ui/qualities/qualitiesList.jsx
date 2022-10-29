@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Quality from './quality';
 import { useDispatch, useSelector } from 'react-redux';
-import { getQualitiesByIds, getQualitiesLoadingStatus, loadingQualitiesList } from '../../../store/qualities';
+import { getQualitiesByIds, getQualitiesLoadingStatus, loadQualitiesList } from '../../../store/qualities';
 
 const QualitiesList = ({ qualities }) => {
     const dispatch = useDispatch();
@@ -11,7 +11,7 @@ const QualitiesList = ({ qualities }) => {
     const qualitiesList = useSelector(getQualitiesByIds(qualities));
 
     useEffect(() => {
-        dispatch(loadingQualitiesList());
+        dispatch(loadQualitiesList());
     }, []);
 
     return (
