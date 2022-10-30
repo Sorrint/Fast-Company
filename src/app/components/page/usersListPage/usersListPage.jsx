@@ -7,10 +7,9 @@ import SearchStatus from '../../ui/searchStatus';
 import UsersTable from '../../ui/usersTable';
 import _ from 'lodash';
 import TextField from '../../common/form/textField';
-import { useUser } from '../../../hooks/useUsers';
-import { useAuth } from '../../../hooks/useAuth';
 import { useSelector } from 'react-redux';
 import { getProfessions, getProfessionsLoadingStatus } from '../../../store/professions';
+import { getCurrentUserId, getUsersList } from '../../../store/users';
 
 const UsersListPage = () => {
     const professions = useSelector(getProfessions());
@@ -22,8 +21,8 @@ const UsersListPage = () => {
     const [searchName, setSearchName] = useState('');
     const pageSize = 8;
 
-    const { users } = useUser();
-    const { currentUser } = useAuth();
+    const users = useSelector(getUsersList());
+    const currentUserId = useSelector(getCurrentUserId());
     const handleDelete = (userId) => {
         // setUsers((prevState) => prevState.filter((users) => users._id !== userId));
         console.log(userId);
@@ -64,7 +63,7 @@ const UsersListPage = () => {
         } else {
             filteredUsers = selectedProf ? data.filter((user) => user.profession === selectedProf._id) : data;
         }
-        return filteredUsers.filter((u) => u._id !== currentUser._id);
+        return filteredUsers.filter((u) => u._id !== currentUserId);
     }
 
     if (users) {
