@@ -11,7 +11,6 @@ import LogOut from './layouts/logOut';
 import AppLoader from './components/ui/hoc/appLoader';
 
 function App() {
-
     return (
         <>
             <AppLoader>
