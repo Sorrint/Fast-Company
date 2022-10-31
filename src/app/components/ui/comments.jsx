@@ -1,21 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CommentsList, { AddCommentsForm } from '../common/comments';
 import _ from 'lodash';
-import { useComments } from '../../hooks/useComments';
+// import { useComments } from '../../hooks/useComments';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
+import {
+    createComment,
+    getComments,
+    getCommentsLoadingStatus,
+    loadCommentsList,
+    removeComment
+} from '../../store/comments';
+import { getCurrentUserId } from '../../store/users';
 
 const Comments = () => {
-    const { createComment, comments, removeComment } = useComments();
+    const dispatch = useDispatch();
+    const { userId } = useParams();
+    const currentUserId = useSelector(getCurrentUserId());
+
+    useEffect(() => {
+        dispatch(loadCommentsList(userId));
+    }, [userId]);
+
+    const comments = useSelector(getComments());
+    const isLoading = useSelector(getCommentsLoadingStatus());
 
     const handleSubmit = (data) => {
-        createComment(data);
-        // api.comments.add({ ...data, pageId: userId }).then((data) => setComments([...comments, data]));
+        dispatch(createComment({ payload: data, userId, currentUserId }));
     };
 
     const handleCommentRemove = (id) => {
-        removeComment(id);
-        // api.comments.remove(id).then((id) => {
-        //     setComments(comments.filter((comment) => comment._id !== id));
-        // });
+        dispatch(removeComment(id));
     };
 
     const sortedComments = _.orderBy(comments, ['created_at'], 'desc');
@@ -31,7 +47,11 @@ const Comments = () => {
                     <div className="card-body">
                         <h2>Comments</h2>
                         <hr />
-                        <CommentsList comments={sortedComments} onRemove={handleCommentRemove} />
+                        {!isLoading ? (
+                            <CommentsList comments={sortedComments} onRemove={handleCommentRemove} />
+                        ) : (
+                            'Loading...'
+                        )}
                     </div>
                 </div>
             )}
