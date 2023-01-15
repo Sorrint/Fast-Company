@@ -4,7 +4,7 @@ import localStorageService from './localStorage.service';
 const httpAuth = axios.create({
     baseURL: 'https://identitytoolkit.googleapis.com/v1/',
     params: {
-        key: 'AIzaSyDY2CPZsk3yzQt8U7YvnmAOeTraENQVKPM'
+        key: process.env.REACT_APP_FIREBASE_KEY
     }
 });
 const authService = {
