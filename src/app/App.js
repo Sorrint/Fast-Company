@@ -17,11 +17,14 @@ function App() {
                 <AuthProvider>
                     <NavBar />
                     <Switch>
-                        <ProtectedRoute path="/users/:userId?/:userEdit?" component={Users}></ProtectedRoute>
-                        <Route path="/" exact component={Main}></Route>
-                        <Route path="/login/:type?" component={Login}></Route>
-                        <Route path="/logout" component={LogOut}></Route>
-                        <Redirect to="/" />
+                        <ProtectedRoute
+                            path="/fast-company/users/:userId?/:userEdit?"
+                            component={Users}
+                        ></ProtectedRoute>
+                        <Route path="/fast-company/" exact component={Main}></Route>
+                        <Route path="/fast-company/login/:type?" component={Login}></Route>
+                        <Route path="/fast-company/logout" component={LogOut}></Route>
+                        <Redirect to="/fast-company/" />
                     </Switch>
                 </AuthProvider>
             </AppLoader>
